@@ -16,7 +16,9 @@ export default config.bot({
   locations: {
     base: './src',
     output: './dist',
+    commands: 'commands',
     events: 'events',
+    langs: 'locales',
   },
   debug: true,
 });

@@ -1,0 +1,2 @@
+# CamelBot
+Camel Discord Bot

@@ -132,3 +132,6 @@ dist
 
 # pnpm
 pnpm-lock.yaml
+
+# test files
+test

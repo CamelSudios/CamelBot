@@ -6,14 +6,19 @@
   "type": "module",
   "scripts": {
     "test": "pnpm clean && pnpm start:debug",
-    "build": "tsc",
+    "build": "node scripts/generateEnvExample.js && tsc",
     "watch": "tsc-watch -p ./tsconfig.json --onSuccess \"pnpm test\"",
     "clean": "node ./scripts/clean.js && pnpm build",
     "start": "node ./dist/index.js",
     "start:debug": "node --env-file=.env ./dist/index.js --debug "
   },
   "dependencies": {
+    "axios": "^1.7.2",
+    "canvas": "^2.11.2",
     "discord-api-types": "^0.37.92",
+    "fast-average-color-node": "^3.0.0",
+    "jimp": "^0.22.12",
+    "mongoose": "^8.5.1",
     "seyfert": "^1.5.0"
   },
   "keywords": [],
@@ -27,5 +32,13 @@
   },
   "engines": {
     "node": ">=20.0.0"
+  },
+  "imports": {
+    "#Camel/client": "./dist/structures/client/Camel.js",
+    "#lib/spotify-api": "./dist/lib/spotify-api/index.js",
+    "#config": "./dist/config.js",
+    "#utils/getAverageColor": "./dist/structures/utils/getAverageColor.js",
+    "#utils/fetch": "./dist/structures/utils/fetch.js",
+    "#lib/image-manipulation": "./dist/lib/image-manipulation/index.js"
   }
 }

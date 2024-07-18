@@ -1,8 +1,8 @@
-import { Client } from 'seyfert';
+import Camel from '#Camel/client';
 import { PresenceUpdateStatus } from 'seyfert/lib/types/index.js';
 import { GatewayPresenceUpdateData, ActivityType } from 'discord-api-types/v10';
 
-const client = new Client({
+const client = new Camel({
   presence: (shardId) => ({
     since: Date.now(),
     afk: false,

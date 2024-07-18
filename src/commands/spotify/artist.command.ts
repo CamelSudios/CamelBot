@@ -23,6 +23,7 @@ const options = {
 @Options(options)
 export default class SongCommand extends SubCommand {
   public async run(ctx: CommandContext<typeof options>) {
+    const messages = ctx.t.get().messages;
     let { artist } = ctx.options;
     const Artist = await ctx.client.spotify.searchArtist(artist);
 
@@ -40,12 +41,12 @@ export default class SongCommand extends SubCommand {
           },
           fields: [
             {
-              name: 'Followers',
+              name: messages.followers,
               value: `\`${Artist.followers.toLocaleString()}\``,
               inline: true,
             },
             {
-              name: 'Genres',
+              name: messages.genres,
               value: `\`${Artist.genres.join(', ')}\``,
               inline: true,
             },

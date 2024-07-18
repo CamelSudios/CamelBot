@@ -7,5 +7,10 @@ export default {
   messages: {
     ping: (ping: number) => `Pong! La latencia es de ${ping}ms.`,
     avatar: (username: string) => `El avatar de ${username}`,
+    nukedBy: (user: string) => `El canal ha sido  nukeado por <@${user}>`,
+    nuking: 'Borrando el canal...',
+    followers: 'Seguidores',
+    genres: 'Géneros',
+    duration: 'Duración',
   },
 };

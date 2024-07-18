@@ -27,6 +27,7 @@ const options = {
 @Options(options)
 export default class SongCommand extends SubCommand {
   public async run(ctx: CommandContext<typeof options>) {
+    const messages = ctx.t.get().messages;
     let { songname, artist } = ctx.options;
     const track = await ctx.client.spotify.searchTrack({
       artist: artist ?? '',
@@ -48,7 +49,7 @@ export default class SongCommand extends SubCommand {
           },
           fields: [
             {
-              name: 'Duration',
+              name: messages.duration,
               value: `\`${track.duration.parsed}\``,
             },
           ],

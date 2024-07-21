@@ -17,7 +17,9 @@
     "canvas": "^2.11.2",
     "discord-api-types": "^0.37.92",
     "fast-average-color-node": "^3.0.0",
+    "genius-lyrics-api": "github:k1-1960/genius-lyrics-api",
     "jimp": "^0.22.12",
+    "lavalink-client": "^2.2.1",
     "mongoose": "^8.5.1",
     "seyfert": "^1.5.0"
   },
@@ -39,6 +41,7 @@
     "#config": "./dist/config.js",
     "#utils/getAverageColor": "./dist/structures/utils/getAverageColor.js",
     "#utils/fetch": "./dist/structures/utils/fetch.js",
-    "#lib/image-manipulation": "./dist/lib/image-manipulation/index.js"
+    "#lib/image-manipulation": "./dist/lib/image-manipulation/index.js",
+    "#lib/lavalink": "./dist/lib/lavalink/index.js"
   }
 }

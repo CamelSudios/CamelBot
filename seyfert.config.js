@@ -12,7 +12,8 @@ export default config.bot({
     GatewayIntentBits.GuildMessageReactions |
     GatewayIntentBits.DirectMessages |
     GatewayIntentBits.DirectMessageReactions |
-    GatewayIntentBits.MessageContent,
+    GatewayIntentBits.MessageContent |
+    GatewayIntentBits.GuildVoiceStates,
   locations: {
     base: './src',
     output: './dist',

@@ -22,7 +22,7 @@ const options = {
 export default class Avatar extends Command {
   async run(ctx: CommandContext<typeof options>) {
     const user = ctx.options.user || ctx.author;
-    const { messages } = ctx.t.get();
+    const { messages } = ctx.t.get('es-419');
     ctx.editOrReply({
       embeds: [
         new Embed()

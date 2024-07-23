@@ -9,3 +9,4 @@ export const LL_HOST = process.env.LL_HOST;
 export const LL_PORT = process.env.LL_PORT;
 export const LL_PASSWORD = process.env.LL_PASSWORD;
 export const GENIUS_ACCESS_TOKEN = process.env.GENIUS_ACCESS_TOKEN;
+export const LAVALINK_PATH = process.env.LAVALINK_PATH || null;

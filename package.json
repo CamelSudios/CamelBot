@@ -13,6 +13,7 @@
     "start:debug": "node --env-file=.env ./dist/index.js --debug "
   },
   "dependencies": {
+    "@types/uuid": "^10.0.0",
     "axios": "^1.7.2",
     "canvas": "^2.11.2",
     "discord-api-types": "^0.37.92",
@@ -21,7 +22,8 @@
     "jimp": "^0.22.12",
     "lavalink-client": "^2.2.1",
     "mongoose": "^8.5.1",
-    "seyfert": "^1.5.0"
+    "seyfert": "^1.5.0",
+    "uuid": "^10.0.0"
   },
   "keywords": [],
   "author": "",

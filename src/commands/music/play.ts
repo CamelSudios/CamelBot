@@ -6,8 +6,6 @@ import {
   Command,
   CommandContext,
   createStringOption,
-  VoiceState,
-  GuildMember,
   VoiceChannel,
 } from 'seyfert';
 import { formatMS_HHMMSS } from '../../structures/utils/time.js';
@@ -34,17 +32,38 @@ const options = {
     required: true,
     autocomplete: async (interaction) => {
       if (!interaction.guildId) return;
+      const { messages } = interaction.client
+        .t((await interaction.fetchGuild())?.preferredLocale || 'en-US')
+        .get();
+
       const vcId = interaction.member!.voice()?.channelId;
 
       if (!vcId)
         return interaction.respond([
-          { name: `Join a voice Channel`, value: 'join_vc' },
+          { name: messages.joinIntoAChannel, value: 'join_vc' },
         ]);
 
       const focussedQuery = interaction.getInput();
       if (focussedQuery.length < 1)
         return interaction.respond([
-          { name: `No Tracks found`, value: 'nothing_found' },
+          { name: messages.noTracksFound, value: 'nothing_found' },
+        ]);
+
+      const clientAsMember =
+        await (await interaction.fetchGuild())!.members.fetch(
+          interaction.client.botId
+        )!;
+
+      const vc = (await interaction.member!.voice()?.channel()) as VoiceChannel;
+
+      let clientPerms = await vc.memberPermissions(clientAsMember);
+
+      if (!clientPerms.has('Connect') || !clientPerms.has('Speak'))
+        return interaction.respond([
+          {
+            name: messages.notAbleToJoinOrSpeak,
+            value: 'missing_perms',
+          },
         ]);
 
       const player =
@@ -65,7 +84,7 @@ const options = {
 
       if (player.voiceChannelId !== vcId)
         return interaction.respond([
-          { name: `You need to be in my Voice Channel`, value: 'join_vc' },
+          { name: messages.mustBeInTheSameVoiceChannel, value: 'join_vc' },
         ]);
 
       const res = (await player.search(
@@ -82,7 +101,7 @@ const options = {
 
       if (!res.tracks.length)
         return await interaction.respond([
-          { name: `No Tracks found`, value: 'nothing_found' },
+          { name: messages.noTracksFound, value: 'nothing_found' },
         ]);
 
       if (autocompleteMap.has(`${interaction.user.id}_timeout`))
@@ -126,9 +145,11 @@ export default class Play extends Command {
     if (!ctx.guildId) return;
     const vcId = ctx.member!.voice()?.channelId;
 
+    const { messages } = ctx.t.get(ctx.guild()!.preferredLocale || 'en-US');
+
     if (!vcId)
       return ctx.editOrReply({
-        content: `Join a voice Channel`,
+        content: messages.joinIntoAChannel,
         flags: MessageFlags.Ephemeral,
       });
 
@@ -142,7 +163,7 @@ export default class Play extends Command {
 
     if (!clientPerms.has('Connect') || !clientPerms.has('Speak'))
       return ctx.editOrReply({
-        content: 'I am not able to join your channel / speak in there.',
+        content: messages.notAbleToJoinOrSpeak,
       });
 
     const source = ctx.options.source as SearchPlatform;
@@ -150,10 +171,10 @@ export default class Play extends Command {
     console.log(query);
 
     if (query === 'nothing_found')
-      return ctx.editOrReply({ content: `No Tracks found` });
+      return ctx.editOrReply({ content: messages.noTracksFound });
     if (query === 'join_vc')
       return ctx.editOrReply({
-        content: `You joined a VC, but redo the Command please.`,
+        content: messages.IHaveBeenConnectedRedoCommand,
       });
 
     const fromAutoComplete =
@@ -190,7 +211,7 @@ export default class Play extends Command {
 
     if (player.voiceChannelId !== vcId)
       return ctx.editOrReply({
-        content: 'You need to be in my Voice Channel',
+        content: messages.mustBeInTheSameVoiceChannel,
       });
 
     const response = (fromAutoComplete ||
@@ -204,7 +225,7 @@ export default class Play extends Command {
       ))) as SearchResult;
 
     if (!response || !response.tracks?.length)
-      return ctx.editOrReply({ content: `No Tracks found` });
+      return ctx.editOrReply({ content: messages.noTracksFound });
 
     let singleTrack =
       response.loadType === 'playlist'
@@ -224,20 +245,11 @@ export default class Play extends Command {
     await ctx.editOrReply({
       content:
         response.loadType === 'playlist' && singleTrack === false
-          ? `✅ Added [${response.tracks.length}] Tracks${
-              response.playlist?.title
-                ? ` - from the ${response.pluginInfo.type || 'Playlist'} ${
-                    response.playlist.uri
-                      ? `[\`${response.playlist.title}\`](<${response.playlist.uri}>)`
-                      : `\`${response.playlist.title}\``
-                  }`
-                : ''
-            } at \`#${player.queue.tracks.length - response.tracks.length}\``
-          : `✅ Added [\`${(singleTrack as Track).info.title}\`](<${
-              (singleTrack as Track).info.uri
-            }>) by \`${(singleTrack as Track).info.author}\` at \`#${
+          ? messages.addedSongsToQueue(response, player.queue.tracks.length)
+          : messages.addedSingleSongToQueue(
+              singleTrack as Track,
               player.queue.tracks.length
-            }\``,
+            ),
     });
 
     if (!player.playing) {

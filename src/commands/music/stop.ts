@@ -1,10 +1,10 @@
-import { Declare, Command, CommandContext } from 'seyfert';
+import { Declare, CommandContext, Command } from 'seyfert';
 
 @Declare({
-  name: 'resume',
-  description: 'Resumes the current song',
+  name: 'stop',
+  description: 'Stops the player',
 })
-export default class Resume extends Command {
+export default class Stop extends Command {
   async run(ctx: CommandContext) {
     if (!ctx.guildId) return;
     const { messages } = ctx.t.get(ctx.guild()!.preferredLocale || 'en-US');
@@ -14,10 +14,8 @@ export default class Resume extends Command {
         content: messages.noGuildPlayer,
         flags: 64,
       });
-    await ctx.deferReply();
-    await player.resume();
-    return ctx.editOrReply({
-      content: messages.resume,
-    });
+
+    await player.destroy();
+    ctx.editOrReply({ content: messages.stopped });
   }
 }

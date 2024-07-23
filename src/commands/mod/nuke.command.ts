@@ -1,4 +1,4 @@
-import { ChannelType } from 'discord-api-types/v10';
+import { ChannelType, PermissionFlagsBits } from 'discord-api-types/v10';
 import { CommandContext, Declare, SubCommand, TextGuildChannel } from 'seyfert';
 
 function sleep(time: number) {
@@ -8,8 +8,10 @@ function sleep(time: number) {
 @Declare({
   name: 'nuke',
   description: 'Deletes a message',
-  botPermissions: ['ManageMessages', 'ManageChannels'],
-  defaultMemberPermissions: ['ManageMessages', 'ManageChannels'],
+  botPermissions:
+    PermissionFlagsBits.ManageChannels | PermissionFlagsBits.ManageMessages,
+  defaultMemberPermissions:
+    PermissionFlagsBits.ManageChannels | PermissionFlagsBits.ManageMessages,
 })
 export default class Nuke extends SubCommand {
   async run(ctx: CommandContext) {
@@ -17,9 +19,7 @@ export default class Nuke extends SubCommand {
     let channel = (await ctx.client.channels.fetch(
       ctx.channelId
     )) as TextGuildChannel;
-    let permissions = (
-      channel as TextGuildChannel
-    ).permissionOverwrites.fetch();
+    let permissions = channel.permissionOverwrites.fetch() || [];
     console.log(permissions);
 
     if (channel.type !== ChannelType.GuildText) {
@@ -36,7 +36,7 @@ export default class Nuke extends SubCommand {
     channel.delete();
 
     let position = channel.position;
-    let parent = channel.parentId;
+    let parent = channel.parentId ?? null;
 
     let pp = permissions!.map((p2) => ({
       id: p2.id,

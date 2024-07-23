@@ -24,13 +24,14 @@ const options = {
 export default class Lyrics extends Command {
   async run(ctx: CommandContext<typeof options>) {
     if (!ctx.guildId) return;
+    const { messages } = ctx.t.get(ctx.guild()!.preferredLocale || 'en-US');
     const player = ctx.client.lavalink.getPlayer(ctx.guildId!);
 
     const { query = false } = ctx.options;
 
     if (!player)
       return ctx.editOrReply({
-        content: 'There is no player in this guild.',
+        content: messages.noGuildPlayer,
         flags: 64,
       });
     await ctx.deferReply();
@@ -44,7 +45,7 @@ export default class Lyrics extends Command {
       let lyrics = await getLyrics(track.name, track.artists.shift()!);
       if (!lyrics)
         return ctx.editOrReply({
-          content: 'No lyrics found.',
+          content: messages.noLyricsFound,
         });
 
       return ctx.editOrReply({
@@ -63,13 +64,13 @@ export default class Lyrics extends Command {
       const current = player.queue.current;
       if (!current)
         return ctx.editOrReply({
-          content: 'There is no current song.',
+          content: messages.noCurrentSong,
         });
 
       let lyrics = await getLyrics(current.info.title, current.info.author);
       if (!lyrics)
         return ctx.editOrReply({
-          content: 'No lyrics found.',
+          content: messages.noLyricsFound,
         });
 
       return ctx.editOrReply({

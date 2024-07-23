@@ -14,6 +14,8 @@ export default class Ping extends Command {
     console.log(shardId);
     const latency = ctx.client.gateway.latency;
     const { messages } = ctx.t.get();
+    const me = ctx.client.langs?.get('es-419');
+    console.log(me?.messages);
     ctx.editOrReply({ content: messages.ping(latency) });
   }
 }

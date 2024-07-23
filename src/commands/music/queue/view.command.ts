@@ -1,11 +1,11 @@
 import { MessageFlags } from 'discord-api-types/v10';
-import { Declare, Options, CommandContext, Command, Embed } from 'seyfert';
+import { Declare, CommandContext, Embed, SubCommand } from 'seyfert';
 
 @Declare({
-  name: 'queue',
+  name: 'view',
   description: 'Shows the current queue',
 })
-export default class Queue extends Command {
+export default class ViewQueue extends SubCommand {
   async run(ctx: CommandContext) {
     if (!ctx.guildId) return;
     const player = ctx.client.lavalink.getPlayer(ctx.guildId!);
